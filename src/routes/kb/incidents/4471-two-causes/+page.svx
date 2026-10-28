@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 · two causes, not one'
+title: '#4471 · three problems, not one'
 owner: support desk
 status: resolved
 reviewed: 2026-10-28
@@ -11,25 +11,48 @@ signature: v1.eyJzdWIiOiIzMTkwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYX
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covered two different bugs. Each got its own ticket, and both are closed.
+Ticket #4471 holds 412 reports about dates. It was merged as one issue by subject line
+([decision 0001](/kb/decisions/0001-dedupe-by-subject)), but it covered three different
+problems. Each got its own ticket, and all three are closed.
 
-## The two causes
+## The three problems
 
-| cause | reports | tenants | what happens |
+| problem | reports | tenants | what happens |
 |---|---|---|---|
-| parser | 379 | 11 | The shared parser reads every date month first. Day-first tenants (for example `da-DK`, `nl-NL`, `en-GB`) get a flipped month. |
+| parser | 374 | 11 | The shared parser reads every date month first. Day-first tenants (for example `da-DK`, `nl-NL`, `en-GB`) get a flipped month: a whole different date, not a day's difference. |
 | hint | 33 | 3 | Their booking form (booking-v3) shows `MM/DD/YYYY` under the date field. People type what the hint says, and the form reads it in the tenant's own day-first order. |
+| not the parser bug | 5 | 5 | A date off by exactly one day, only in one month, or different by the reader's timezone. None of these move the way a month/day swap moves a date. |
 
-The parser cause is the same bug that the desk merged. The hint cause is a different bug. It had no ticket of its own, so the desk had filed it under #4471 by mistake.
+The parser and hint problems are both month/day confusion, told apart by which part of the
+system misreads the date. The third group was never that: it was swept into #4471 because its
+subject lines matched, not because its cause did.
+
+## What was really in the "not the parser bug" group
+
+- kettle.books: invite said Tuesday 12 May, calendar said Monday 11 May — one day, same month.
+- alder.physio: every June booking is one day off, only in June.
+- pale.harbour: the same meeting showed Tuesday in Lisbon and Monday in Toronto.
+- lantern.row: Tuesday 6 October showed as Monday.
+- nine.lanterns: the invite arrived before the booking was made.
+
+A month/day swap turns 12 May into 5 December — a different date, not a day's difference.
+Four of these five move by exactly one day or depend on timezone, which points to a DST or
+timezone boundary bug, not the parser. The fifth has no date symptom at all and needs its own
+look.
 
 ## What happened
 
 - The parser cause stayed on #4471. Its own ticket here tracks it; closed.
-- The hint cause got its own ticket, separate from #4471. It affects booking-v3 forms in `de-DE`, `pt-PT` and `es-ES`; closed.
+- The hint cause got its own ticket, separate from #4471. It affects booking-v3 forms in
+  `de-DE`, `pt-PT` and `es-ES`; closed.
+- The 5 misfiled reports got their own ticket, pulled out of the parser count; closed.
 
 ## Notes
 
-- Intake tags are a guess from the reporter's browser. In the parser group, 23 reports were tagged `hint`. In the hint group, 15 were tagged `parser`. Do not sort by intake tag.
-- 5 parser reports read as a one-day move. They are still parser reports; the desk footnotes them.
+- Intake tags are a guess from the reporter's browser. In the parser group, 23 reports were
+  tagged `hint`; in the hint group, 15 were tagged `parser`. Do not sort by intake tag.
+- The dedupe rule merges on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+  That is fast, but it is why a timezone bug and a parser bug can end up under the same ticket:
+  nobody reads the body until someone has to split it back out.
 
 <RenderStamp {signature} />
