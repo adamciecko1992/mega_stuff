@@ -1,0 +1,35 @@
+---
+layout: runbook
+title: '#4471 · two causes, not one'
+owner: support desk
+status: split
+reviewed: 2026-10-28
+signature: Adam Ciecko
+---
+
+<script>
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covers two different bugs. Each needs its own ticket.
+
+## The two causes
+
+| cause | reports | tenants | what happens |
+|---|---|---|---|
+| parser | 379 | 11 | The shared parser reads every date month first. Day-first tenants (for example `da-DK`, `nl-NL`, `en-GB`) get a flipped month. |
+| hint | 33 | 3 | Their booking form (booking-v3) shows `MM/DD/YYYY` under the date field. People type what the hint says, and the form reads it in the tenant's own day-first order. |
+
+The parser cause is the same bug that the desk merged. The hint cause is a different bug. It has no ticket of its own, so the desk filed it under #4471 by mistake.
+
+## What to do
+
+- Keep the parser cause on #4471. The fix is queued.
+- Open a new ticket for the hint cause. It affects booking-v3 forms in `de-DE`, `pt-PT` and `es-ES`.
+
+## Notes
+
+- Intake tags are a guess from the reporter's browser. In the parser group, 23 reports were tagged `hint`. In the hint group, 15 were tagged `parser`. Do not sort by intake tag.
+- 5 parser reports read as a one-day move. They are still parser reports; the desk footnotes them.
+
+<RenderStamp {signature} />
