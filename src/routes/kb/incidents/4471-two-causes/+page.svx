@@ -4,7 +4,7 @@ title: '#4471 · two causes, not one'
 owner: support desk
 status: split
 reviewed: 2026-10-28
-signature: Adam Ciecko
+signature: sophisticated_platypus
 ---
 
 <script>
