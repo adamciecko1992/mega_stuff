@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>#4471 · two causes, not one · support kb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171716; --fg: #ecebe6; --muted: #9c9a93; --line: #34332f;
+      --accent: #6fbfa6; --warn: #f0905d; --warn-bg: #3a2418; --note-bg: #1d2c27;
+    }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+  .kb table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  .kb th, .kb td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+  .kb code { font-family: var(--mono); font-size: 0.88em; }
+  .kb a { color: var(--accent); }
+  .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+  .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+  h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  aside.note { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--note-bg); }
+  .sum { font-size: 1.1rem; }
+  .tags { color: var(--muted); font-size: 0.85em; }
+  .note-line { color: var(--muted); font-size: 0.85em; }
+  .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
+  .stamp b { color: var(--accent); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk · kb</a>
+    <h1>#4471 · two causes, not one</h1>
+    <p class="meta">
+      <span>owner <b>support desk</b></span>
+      <span class="status split">split</span>
+      <span>reviewed 2026-10-28 · 0 days ago</span>
+    </p>
+  </header>
+  <main>
+    <p>Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covers
+    two different bugs. Each needs its own ticket.</p>
+
+    <h2>The two causes</h2>
+
+    <p class="sum"><strong>412</strong> reports merged into #4471 · <strong>2</strong> causes</p>
+    <table>
+      <thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>parser</code></td>
+          <td>379</td>
+          <td class="tags">parser ×356 · hint ×23</td>
+          <td>11</td>
+          <td>2026-04-01 → 2026-10-04</td>
+          <td>#4471</td>
+        </tr>
+        <tr style="background: var(--warn-bg);">
+          <td><code>hint</code></td>
+          <td>33</td>
+          <td class="tags">hint ×18 · parser ×15</td>
+          <td>3</td>
+          <td>2026-04-17 → 2026-09-22</td>
+          <td style="color: var(--warn); font-weight: 600;">not this ticket — no ticket of its own</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note-line">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p>
+
+    <aside class="note">
+      Known. One issue, one fix queued — for the <code>parser</code> cause. The <code>hint</code> cause is a
+      separate bug with no ticket of its own.
+    </aside>
+
+    <p>The parser cause is the same bug that the desk merged. The hint cause is a different
+    bug. It has no ticket of its own, so the desk filed it under #4471 by mistake.</p>
+
+    <h2>What to do</h2>
+    <ul>
+      <li>Keep the parser cause on #4471. The fix is queued.</li>
+      <li>Open a new ticket for the hint cause. It affects booking-v3 forms in
+      <code>de-DE</code>, <code>pt-PT</code> and <code>es-ES</code>.</li>
+    </ul>
+
+    <h2>Notes</h2>
+    <ul>
+      <li>Intake tags are a guess from the reporter's browser. In the parser group, 23 reports
+      were tagged <code>hint</code>. In the hint group, 15 were tagged <code>parser</code>. Do
+      not sort by intake tag.</li>
+      <li>5 parser reports read as a one-day move. They are still parser reports; the desk
+      footnotes them.</li>
+    </ul>
+
+    <p class="stamp">desk ref <b>DR-5Q2M-3EMP</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div>
+</body>
+</html>
