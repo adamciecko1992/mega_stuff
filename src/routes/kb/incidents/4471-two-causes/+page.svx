@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 · two causes, not one'
 owner: support desk
-status: split
+status: resolved
 reviewed: 2026-10-28
 signature: v1.eyJzdWIiOiIzMTkwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyMjYyMTksImV4cCI6MTc5MzMxMjYxOX0.lMn3rraui8jFjqZQYnsjhXkfGmglYcElgUn7LgRB0ZM
 ---
@@ -11,7 +11,7 @@ signature: v1.eyJzdWIiOiIzMTkwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYX
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covers two different bugs. Each needs its own ticket.
+Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covered two different bugs. Each got its own ticket, and both are closed.
 
 ## The two causes
 
@@ -20,12 +20,12 @@ Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it c
 | parser | 379 | 11 | The shared parser reads every date month first. Day-first tenants (for example `da-DK`, `nl-NL`, `en-GB`) get a flipped month. |
 | hint | 33 | 3 | Their booking form (booking-v3) shows `MM/DD/YYYY` under the date field. People type what the hint says, and the form reads it in the tenant's own day-first order. |
 
-The parser cause is the same bug that the desk merged. The hint cause is a different bug. It has no ticket of its own, so the desk filed it under #4471 by mistake.
+The parser cause is the same bug that the desk merged. The hint cause is a different bug. It had no ticket of its own, so the desk had filed it under #4471 by mistake.
 
-## What to do
+## What happened
 
-- Keep the parser cause on #4471. The fix is queued.
-- Open a new ticket for the hint cause. It affects booking-v3 forms in `de-DE`, `pt-PT` and `es-ES`.
+- The parser cause stayed on #4471. Its own ticket here tracks it; closed.
+- The hint cause got its own ticket, separate from #4471. It affects booking-v3 forms in `de-DE`, `pt-PT` and `es-ES`; closed.
 
 ## Notes
 
