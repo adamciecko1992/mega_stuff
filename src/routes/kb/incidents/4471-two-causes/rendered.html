@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>#4471 · three problems, not one · support kb</title>
+<title>#4471 · two causes, not one · support kb</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root {
@@ -27,6 +27,16 @@
   .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
   .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
   footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  /* Callout */
+  aside { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--note-bg); }
+  aside.warn { border-color: var(--warn); background: var(--warn-bg); }
+  /* CauseTable */
+  .sum { font-size: 1.1rem; }
+  .tags { color: var(--muted); font-size: 0.85em; }
+  .note { color: var(--muted); font-size: 0.85em; }
+  .wrong td { background: var(--warn-bg); }
+  .wrong td:last-child { color: var(--warn); font-weight: 600; }
+  /* RenderStamp */
   .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
   .stamp b { color: var(--accent); letter-spacing: 0.04em; }
 </style>
@@ -35,80 +45,75 @@
 <div class="kb">
   <header>
     <a class="crumb" href="/kb">support desk · kb</a>
-    <h1>#4471 · three problems, not one</h1>
+    <h1>#4471 · two causes, not one</h1>
     <p class="meta">
       <span>owner <b>support desk</b></span>
-      <span class="status resolved">resolved</span>
+      <span class="status closed">closed</span>
       <span>reviewed 2026-10-28 · 0 days ago</span>
     </p>
   </header>
   <main>
-    <p>Ticket #4471 holds 412 reports about dates. It was merged as one issue by subject line
-    (decision 0001), but it covered three different problems. Each got its own ticket, and all
-    three are closed.</p>
+    <p>Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covers two
+    different bugs. Each got its own ticket.</p>
 
-    <h2>The three problems</h2>
+    <h2>What was merged</h2>
+
+    <p class="sum"><strong>412</strong> reports merged into #4471 · <strong>2</strong> causes</p>
     <table>
-      <thead><tr><th>problem</th><th>reports</th><th>tenants</th><th>what happens</th></tr></thead>
+      <thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead>
       <tbody>
         <tr>
           <td><code>parser</code></td>
-          <td>374</td>
+          <td>379</td>
+          <td class="tags">parser ×356 · hint ×23</td>
           <td>11</td>
-          <td>The shared parser reads every date month first. Day-first tenants get a flipped
-          month: a whole different date, not a day's difference.</td>
+          <td>2026-04-01 → 2026-10-04</td>
+          <td>#4471</td>
         </tr>
-        <tr>
+        <tr class="wrong">
           <td><code>hint</code></td>
           <td>33</td>
+          <td class="tags">hint ×18 · parser ×15</td>
           <td>3</td>
-          <td>The booking-v3 form shows MM/DD/YYYY to day-first tenants, and people type what
-          the hint says.</td>
+          <td>2026-04-17 → 2026-09-22</td>
+          <td>not this ticket — no ticket of its own</td>
         </tr>
-        <tr style="background: var(--warn-bg);">
-          <td><code>not the parser bug</code></td>
-          <td>5</td>
-          <td>5</td>
-          <td style="color: var(--warn); font-weight: 600;">A one-day or timezone shift, not a
-          month/day swap. Merged by subject line, not by cause.</td>
+      </tbody>
+    </table>
+    <p class="note">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p>
+
+    <h2>What happened to each</h2>
+    <table>
+      <thead><tr><th>cause</th><th>what happens</th><th>outcome</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>parser</td>
+          <td>The shared parser reads every date month first. Day-first tenants get a flipped month.</td>
+          <td>fixed: <code>fix(dates): parse dd/mm for eu locales</code></td>
+        </tr>
+        <tr>
+          <td>hint</td>
+          <td>The booking-v3 form shows <code>MM/DD/YYYY</code> under the date field. People type month
+          first, and the form reads it day first.</td>
+          <td>won't fix: booking-v3 form retired</td>
         </tr>
       </tbody>
     </table>
 
-    <p>The parser and hint problems are both month/day confusion, told apart by which part of
-    the system misreads the date. The third group was never that: it was swept into #4471
-    because its subject lines matched, not because its cause did.</p>
-
-    <h2>What was really in the "not the parser bug" group</h2>
-    <ul>
-      <li>kettle.books: invite said Tuesday 12 May, calendar said Monday 11 May — one day, same
-      month.</li>
-      <li>alder.physio: every June booking is one day off, only in June.</li>
-      <li>pale.harbour: the same meeting showed Tuesday in Lisbon and Monday in Toronto.</li>
-      <li>lantern.row: Tuesday 6 October showed as Monday.</li>
-      <li>nine.lanterns: the invite arrived before the booking was made.</li>
-    </ul>
-    <p>A month/day swap turns 12 May into 5 December — a different date, not a day's
-    difference. Four of these five move by exactly one day or depend on timezone, which points
-    to a DST or timezone boundary bug, not the parser. The fifth has no date symptom at all and
-    needs its own look.</p>
-
-    <h2>What happened</h2>
-    <ul>
-      <li>The parser cause stayed on #4471. Its own ticket here tracks it; closed.</li>
-      <li>The hint cause got its own ticket, separate from #4471. It affects booking-v3 forms
-      in <code>de-DE</code>, <code>pt-PT</code> and <code>es-ES</code>; closed.</li>
-      <li>The 5 misfiled reports got their own ticket, pulled out of the parser count; closed.</li>
-    </ul>
+    <aside class="warn">
+      The parser fix did not fix the hint bug. Closing #4471 as one issue would have hidden 33
+      reports behind a fix that never touched them.
+    </aside>
 
     <h2>Notes</h2>
     <ul>
-      <li>Intake tags are a guess from the reporter's browser. In the parser group, 23 reports
-      were tagged <code>hint</code>; in the hint group, 15 were tagged <code>parser</code>. Do
-      not sort by intake tag.</li>
-      <li>The dedupe rule merges on subject line alone (decision 0001). That is fast, but it is
-      why a timezone bug and a parser bug can end up under the same ticket: nobody reads the
-      body until someone has to split it back out.</li>
+      <li>Intake tags are a guess from the reporter's browser. In the parser group, 23 reports were
+      tagged <code>hint</code>; in the hint group, 15 were tagged <code>parser</code>. Group by
+      tenant and channel, not by intake tag.</li>
+      <li>5 parser reports read as a one-day move. The desk files them under <code>parser</code> by
+      tenant and footnotes them.</li>
+      <li>#4471 was merged by subject line (<a href="/kb/decisions/0001-dedupe-by-subject">decision
+      0001</a>). Matching subjects do not mean a matching cause.</li>
     </ul>
 
     <p class="stamp">desk ref <b>DR-ZE4E-P7ZB</b></p>

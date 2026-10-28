@@ -2,4 +2,4 @@ Covers: 33 reports, merged into #4471, from 3 tenants (copper.studio, alder.phys
 
 Cause: the booking-v3 form shows MM/DD/YYYY under the date field. Its tenants write the day first (de-DE, pt-PT, es-ES). People type what the hint says, month first, and the form reads it in the tenant's day-first order, so the date is flipped. This is a different bug from the shared parser issue, and it has no ticket of its own.
 
-Action: filed as its own ticket, separate from #4471. The fix shipped; closing this ticket.
+Status: won't fix. Engineering retired the booking-v3 form, so the hint no longer reaches anyone. The parser fix on #4471 does not cover this bug.

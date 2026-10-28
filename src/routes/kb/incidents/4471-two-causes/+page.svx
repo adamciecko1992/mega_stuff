@@ -1,58 +1,45 @@
 ---
 layout: runbook
-title: '#4471 · three problems, not one'
+title: '#4471 · two causes, not one'
 owner: support desk
-status: resolved
+status: closed
 reviewed: 2026-10-28
 signature: v1.eyJzdWIiOiIzMTkwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyMjYyMTksImV4cCI6MTc5MzMxMjYxOX0.lMn3rraui8jFjqZQYnsjhXkfGmglYcElgUn7LgRB0ZM
 ---
 
 <script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-Ticket #4471 holds 412 reports about dates. It was merged as one issue by subject line
-([decision 0001](/kb/decisions/0001-dedupe-by-subject)), but it covered three different
-problems. Each got its own ticket, and all three are closed.
+Ticket #4471 holds 412 reports about dates. It was merged as one issue, but it covers two
+different bugs. Each got its own ticket.
 
-## The three problems
+## What was merged
 
-| problem | reports | tenants | what happens |
-|---|---|---|---|
-| parser | 374 | 11 | The shared parser reads every date month first. Day-first tenants (for example `da-DK`, `nl-NL`, `en-GB`) get a flipped month: a whole different date, not a day's difference. |
-| hint | 33 | 3 | Their booking form (booking-v3) shows `MM/DD/YYYY` under the date field. People type what the hint says, and the form reads it in the tenant's own day-first order. |
-| not the parser bug | 5 | 5 | A date off by exactly one day, only in one month, or different by the reader's timezone. None of these move the way a month/day swap moves a date. |
+<CauseTable ticket={4471} />
 
-The parser and hint problems are both month/day confusion, told apart by which part of the
-system misreads the date. The third group was never that: it was swept into #4471 because its
-subject lines matched, not because its cause did.
+## What happened to each
 
-## What was really in the "not the parser bug" group
+| cause | what happens | outcome |
+|---|---|---|
+| parser | The shared parser reads every date month first. Day-first tenants get a flipped month. | fixed: `fix(dates): parse dd/mm for eu locales` |
+| hint | The booking-v3 form shows `MM/DD/YYYY` under the date field. People type month first, and the form reads it day first. | won't fix: booking-v3 form retired |
 
-- kettle.books: invite said Tuesday 12 May, calendar said Monday 11 May — one day, same month.
-- alder.physio: every June booking is one day off, only in June.
-- pale.harbour: the same meeting showed Tuesday in Lisbon and Monday in Toronto.
-- lantern.row: Tuesday 6 October showed as Monday.
-- nine.lanterns: the invite arrived before the booking was made.
-
-A month/day swap turns 12 May into 5 December — a different date, not a day's difference.
-Four of these five move by exactly one day or depend on timezone, which points to a DST or
-timezone boundary bug, not the parser. The fifth has no date symptom at all and needs its own
-look.
-
-## What happened
-
-- The parser cause stayed on #4471. Its own ticket here tracks it; closed.
-- The hint cause got its own ticket, separate from #4471. It affects booking-v3 forms in
-  `de-DE`, `pt-PT` and `es-ES`; closed.
-- The 5 misfiled reports got their own ticket, pulled out of the parser count; closed.
+<Callout kind="warn">
+The parser fix did not fix the hint bug. Closing #4471 as one issue would have hidden 33
+reports behind a fix that never touched them.
+</Callout>
 
 ## Notes
 
 - Intake tags are a guess from the reporter's browser. In the parser group, 23 reports were
-  tagged `hint`; in the hint group, 15 were tagged `parser`. Do not sort by intake tag.
-- The dedupe rule merges on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
-  That is fast, but it is why a timezone bug and a parser bug can end up under the same ticket:
-  nobody reads the body until someone has to split it back out.
+  tagged `hint`; in the hint group, 15 were tagged `parser`. Group by tenant and channel, not
+  by intake tag.
+- 5 parser reports read as a one-day move. The desk files them under `parser` by tenant and
+  footnotes them.
+- #4471 was merged by subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+  Matching subjects do not mean a matching cause.
 
 <RenderStamp {signature} />
